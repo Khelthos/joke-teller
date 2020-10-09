@@ -106,10 +106,10 @@ const VoiceRSS = {
   },
 };
 
-function test() {
+function speak(text) {
   VoiceRSS.speech({
     key: "f909698f7a0a4b4ebb2c3e10a18a28a5",
-    src: "Hello, world!",
+    src: text,
     hl: "en-us",
     v: "Linda",
     r: 0,
@@ -119,4 +119,25 @@ function test() {
   });
 }
 
-test();
+// Get jokes from API
+async function getJokes() {
+  let joke = "";
+  const apiUrl =
+    "https://sv443.net/jokeapi/v2/joke/Programming?blacklistFlags=nsfw,religious,political,racist,sexist";
+  try {
+    const response = await fetch(apiUrl);
+    const data = await response.json();
+    if (data.setup) {
+      joke = `${data.setup} ... ${data.delivery}`;
+    } else {
+      joke = data.joke;
+    }
+    speak(joke);
+  } catch (error) {
+    console.log("Error! ", error);
+  }
+}
+
+// onLoad
+//test();
+button.addEventListener("click", getJokes);
