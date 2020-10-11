@@ -1,5 +1,6 @@
 const audioElement = document.getElementById("audio");
 const button = document.getElementById("button");
+const bubbleElement = document.getElementById('bubble')
 
 // VoiceRSS Javascript SDK
 const VoiceRSS = {
@@ -111,7 +112,7 @@ function speak(text) {
     key: "f909698f7a0a4b4ebb2c3e10a18a28a5",
     src: text,
     hl: "en-us",
-    v: "Linda",
+    v: "John",
     r: 0,
     c: "mp3",
     f: "44khz_16bit_stereo",
@@ -121,6 +122,7 @@ function speak(text) {
 
 // Get jokes from API
 async function getJokes() {
+
   let joke = "";
   const apiUrl =
     "https://sv443.net/jokeapi/v2/joke/Programming?blacklistFlags=nsfw,religious,political,racist,sexist";
@@ -132,12 +134,20 @@ async function getJokes() {
     } else {
       joke = data.joke;
     }
+    bubbleElement.textContent = joke.replace("...",'\n');
     speak(joke);
+    toggleButton();
   } catch (error) {
     console.log("Error! ", error);
   }
 }
 
+function toggleButton() {
+  button.disabled = !button.disabled;
+  bubbleElement.hidden = !bubbleElement.hidden;
+}
+
 // onLoad
 //test();
 button.addEventListener("click", getJokes);
+audioElement.addEventListener('ended', toggleButton)
